@@ -1,6 +1,7 @@
 {
   "py": {
     "name": "Python",
+    "simple": ["python", "py"],
     "download": "https://www.python.org/downloads/",
     "check": "python --version",
     "run": "python {{file}}",
@@ -9,6 +10,7 @@
 
   "rb": {
     "name": "Ruby",
+    "simple": ["ruby", "rb"],
     "download": "https://www.ruby-lang.org/en/downloads/",
     "check": "ruby --version",
     "run": "ruby {{file}}",
@@ -17,6 +19,7 @@
 
   "php": {
     "name": "PHP",
+    "simple": ["php"],
     "download": "https://www.php.net/downloads",
     "check": "php --version",
     "run": "php {{file}}",
@@ -25,6 +28,7 @@
 
   "js": {
     "name": "JavaScript (Node.js)",
+    "simple": ["javascript", "js", "node", "nodejs"],
     "download": "https://nodejs.org/en/download/",
     "check": "node --version",
     "run": "node {{file}}",
@@ -33,6 +37,7 @@
 
   "ts": {
     "name": "TypeScript",
+    "simple": ["typescript", "ts"],
     "download": "https://www.typescriptlang.org/download/",
     "check": "tsc --version && node --version",
     "run": "tsc {{file}} && node {{file}}",
@@ -41,6 +46,7 @@
 
   "java": {
     "name": "Java",
+    "simple": ["java"],
     "download": "https://www.oracle.com/java/technologies/downloads/",
     "check": "javac -version",
     "run": "javac {{file}} && java {{class_name}}",
@@ -49,6 +55,7 @@
 
   "kt": {
     "name": "Kotlin",
+    "simple": ["kotlin", "kt"],
     "download": "https://kotlinlang.org/docs/command-line.html",
     "check": "kotlinc -version",
     "run": "kotlinc {{file}} -include-runtime -d {{out}} && java -jar {{out}}",
@@ -58,6 +65,7 @@
 
   "cs": {
     "name": "C#",
+    "simple": ["csharp", "cs", "c#"],
     "download": "https://dotnet.microsoft.com/en-us/download",
     "check": "dotnet --version",
     "run": "dotnet run",
@@ -66,6 +74,7 @@
 
   "rs": {
     "name": "Rust",
+    "simple": ["rust", "rs"],
     "download": "https://www.rust-lang.org/tools/install",
     "check": "rustc --version",
     "run": "rustc {{file}} -o {{out}} && ./{{out}}",
@@ -75,6 +84,7 @@
 
   "go": {
     "name": "Go",
+    "simple": ["go", "golang"],
     "download": "https://go.dev/dl/",
     "check": "go version",
     "run": "go run {{file}}",
@@ -83,6 +93,7 @@
 
   "c": {
     "name": "C",
+    "simple": ["c"],
     "download": "https://gcc.gnu.org/install/",
     "check": "gcc --version",
     "run": "gcc {{file}} -o {{out}} && ./{{out}}",
@@ -92,6 +103,7 @@
 
   "cpp": {
     "name": "C++",
+    "simple": ["cpp", "c++"],
     "download": "https://gcc.gnu.org/install/",
     "check": "g++ --version",
     "run": "g++ {{file}} -o {{out}} && ./{{out}}",
@@ -101,6 +113,7 @@
 
   "swift": {
     "name": "Swift",
+    "simple": ["swift"],
     "download": "https://www.swift.org/download/",
     "check": "swift --version",
     "run": "swift {{file}}",
@@ -109,6 +122,7 @@
 
   "lua": {
     "name": "Lua",
+    "simple": ["lua"],
     "download": "https://www.lua.org/download.html",
     "check": "lua -v",
     "run": "lua {{file}}",
@@ -117,6 +131,7 @@
 
   "r": {
     "name": "R",
+    "simple": ["r"],
     "download": "https://cran.r-project.org/",
     "check": "R --version",
     "run": "Rscript {{file}}",
@@ -125,6 +140,7 @@
 
   "jl": {
     "name": "Julia",
+    "simple": ["julia", "jl"],
     "download": "https://julialang.org/downloads/",
     "check": "julia --version",
     "run": "julia {{file}}",
@@ -133,6 +149,7 @@
 
   "zig": {
     "name": "Zig",
+    "simple": ["zig"],
     "download": "https://ziglang.org/download/",
     "check": "zig version",
     "run": "zig build-exe {{file}} && ./{{out}}",
@@ -142,6 +159,7 @@
 
   "nim": {
     "name": "Nim",
+    "simple": ["nim"],
     "download": "https://nim-lang.org/install.html",
     "check": "nim --version",
     "run": "nim c {{file}} && ./{{out}}",
@@ -151,6 +169,7 @@
 
   "d": {
     "name": "D",
+    "simple": ["d"],
     "download": "https://dlang.org/download.html",
     "check": "dmd --version",
     "run": "dmd {{file}} && ./{{out}}",
@@ -160,6 +179,7 @@
 
   "scala": {
     "name": "Scala",
+    "simple": ["scala"],
     "download": "https://www.scala-lang.org/download/",
     "check": "scala -version",
     "run": "scalac {{file}} && scala {{class_name}}",
@@ -168,6 +188,7 @@
 
   "perl": {
     "name": "Perl",
+    "simple": ["perl"],
     "download": "https://www.perl.org/get.html",
     "check": "perl --version",
     "run": "perl {{file}}",
@@ -176,6 +197,7 @@
 
   "haskell": {
     "name": "Haskell",
+    "simple": ["haskell", "hs"],
     "download": "https://www.haskell.org/ghcup/",
     "check": "ghc --version",
     "run": "ghc {{file}} -o {{out}} && ./{{out}}",
@@ -185,6 +207,7 @@
 
   "elixir": {
     "name": "Elixir",
+    "simple": ["elixir", "ex"],
     "download": "https://elixir-lang.org/install.html",
     "check": "elixir --version",
     "run": "elixir {{file}}",
@@ -193,6 +216,7 @@
 
   "clojure": {
     "name": "Clojure",
+    "simple": ["clojure", "clj"],
     "download": "https://clojure.org/guides/install_clojure",
     "check": "clojure --version",
     "run": "clojure {{file}}",
@@ -201,6 +225,7 @@
 
   "dart": {
     "name": "Dart",
+    "simple": ["dart"],
     "download": "https://dart.dev/get-dart",
     "check": "dart --version",
     "run": "dart {{file}}",
@@ -209,6 +234,7 @@
 
   "lisp": {
     "name": "Common Lisp",
+    "simple": ["lisp", "common lisp", "cl"],
     "download": "https://lisp-lang.org/downloads/",
     "check": "sbcl --version",
     "run": "sbcl --script {{file}}",
@@ -217,6 +243,7 @@
 
   "bash": {
     "name": "Bash",
+    "simple": ["bash", "sh", "shell"],
     "download": "https://www.gnu.org/software/bash/",
     "check": "bash --version",
     "run": "bash {{file}}",
@@ -225,6 +252,7 @@
 
   "groovy": {
     "name": "Groovy",
+    "simple": ["groovy"],
     "download": "https://groovy.apache.org/download.html",
     "check": "groovy --version",
     "run": "groovy {{file}}",
@@ -233,6 +261,7 @@
 
   "ocaml": {
     "name": "OCaml",
+    "simple": ["ocaml", "ml"],
     "download": "https://ocaml.org/docs/install.html",
     "check": "ocaml --version",
     "run": "ocamlc -o {{out}} {{file}} && ./{{out}}",

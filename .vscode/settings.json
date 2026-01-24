@@ -1,7 +1,14 @@
 {
     "cSpell.words": [
         "errorlevel",
+        "javac",
+        "kotlinc",
+        "ocamlc",
         "pterm",
+        "Rscript",
+        "rustc",
+        "sbcl",
+        "scalac",
         "useb"
     ]
 }
