@@ -4,19 +4,21 @@ import (
 	"encoding/json"
 	"fmt"
 	"os"
-	"run/cmd/utils"
 	"strings"
+
+	"run/cmd/utils"
 
 	"github.com/pterm/pterm"
 	"github.com/spf13/cobra"
 )
 
 type Language struct {
-	Name     string `json:"name"`
-	Download string `json:"download"`
-	Check    string `json:"check"`
-	Run      string `json:"run"`
-	Type     string `json:"type"`
+	Name     string   `json:"name"`
+	Simple   []string `json:"simple"`
+	Download string   `json:"download"`
+	Check    string   `json:"check"`
+	Run      string   `json:"run"`
+	Type     string   `json:"type"`
 }
 
 var languages = loadLanguagesConfig()
@@ -26,48 +28,11 @@ var rootCmd = &cobra.Command{
 	Short: ShortDescription,
 	Long:  LongDescription,
 	Args:  cobra.MaximumNArgs(1),
-	Run: func(cmd *cobra.Command, args []string) {
-
-		if len(args) == 0 {
-			cmd.Help()
-			os.Exit(0)
-		}
-
-		file := args[0]
-
-		if err := validSourceFile(file); err != nil {
-			pterm.DefaultBasicText.Print(pterm.Red(err))
-			return
-		} else {
-			fileExtension := utils.GetFileExtension(file)
-			checkCommand := getCheckCommand(fileExtension)
-
-			if utils.IsUnixLike() {
-				checkCommand = strings.ReplaceAll(checkCommand, "python", "python3")
-			}
-
-			if utils.IsInstalled(checkCommand) {
-				preprocessedCommand := utils.ReplacePlaceholders(getRunCommand(fileExtension), file)
-
-				if utils.IsUnixLike() {
-					preprocessedCommand = strings.ReplaceAll(preprocessedCommand, "python", "python3")
-				}
-				err := utils.Run(preprocessedCommand)
-				if err != nil {
-					fmt.Printf("An error occurred: %s\n", err)
-				}
-			} else {
-				fmt.Printf("Oops. %s %s is not installed on your machine\n", getName(fileExtension), getType(fileExtension))
-				fmt.Printf("However You can download it from here for your %s machine:\n%s\n", utils.CurrentOS(), getDownload(fileExtension))
-			}
-		}
-
-	},
+	Run:   runFile,
 }
 
 func Execute() {
-	err := rootCmd.Execute()
-	if err != nil {
+	if err := rootCmd.Execute(); err != nil {
 		os.Exit(1)
 	}
 }
@@ -76,118 +41,93 @@ func init() {
 	rootCmd.Version = Version
 }
 
-func loadLanguagesConfig() map[string]Language {
-	config := utils.RunConfig
-
-	var languages map[string]Language
-
-	if err := json.Unmarshal([]byte(config), &languages); err != nil {
-		panic(fmt.Sprintf("Unable to load languages config file due to: %s", err))
+func runFile(cmd *cobra.Command, args []string) {
+	if len(args) == 0 {
+		_ = cmd.Help()
+		return
 	}
 
-	return languages
+	file := args[0]
+
+	lang, err := validateAndGetLanguage(file)
+	if err != nil {
+		pterm.Error.Println(err)
+		return
+	}
+
+	checkCmd := normalizeCommand(lang.Check)
+
+	if !utils.IsInstalled(checkCmd) {
+		printInstallHint(lang)
+		return
+	}
+
+	runCmd := utils.ReplacePlaceholders(lang.Run, file)
+	runCmd = normalizeCommand(runCmd)
+
+	if err := utils.Run(runCmd); err != nil {
+		pterm.Error.Printf("Execution failed: %v\n", err)
+	}
 }
 
-func validSourceFile(file string) error {
-	extension := utils.GetFileExtension(file)
+func loadLanguagesConfig() map[string]Language {
+	var langs map[string]Language
 
-	if !utils.IsFileExist(file) {
-		return fmt.Errorf(
-			"source file %q doesn't exist\n",
-			file,
-		)
+	if err := json.Unmarshal([]byte(utils.RunConfig), &langs); err != nil {
+		panic(fmt.Sprintf("failed to load languages config: %v", err))
 	}
 
-	if extension == "" {
-		return fmt.Errorf(
-			"source file %q It must have an extension (%s)",
+	return langs
+}
+
+func validateAndGetLanguage(file string) (Language, error) {
+	if !utils.IsFileExist(file) {
+		return Language{}, fmt.Errorf("source file %q doesn't exist", file)
+	}
+
+	ext := strings.ToLower(utils.GetFileExtension(file))
+	if ext == "" {
+		return Language{}, fmt.Errorf(
+			"source file %q must have an extension (%s)",
 			file,
 			Examples,
 		)
 	}
 
-	_, ok := languages[strings.ToLower(extension)]
+	lang, ok := languages[ext]
 	if !ok {
-		return fmt.Errorf("%q file extension is not supported", extension)
+		return Language{}, fmt.Errorf("file extension %q is not supported", ext)
 	}
 
-	return nil
+	return lang, nil
 }
 
-func get(fileExtension, kind string) (string, bool) {
-	kind = strings.ToLower(kind)
-	lang, ok := languages[strings.ToLower(fileExtension)]
-
-	if !ok {
-		return fmt.Sprintf("%s file is not supported", fileExtension), false
+func normalizeCommand(cmd string) string {
+	if utils.IsUnixLike() {
+		return strings.ReplaceAll(cmd, "python", "python3")
 	}
-
-	switch kind {
-	case "name":
-		return lang.Name, true
-
-	case "download":
-		return lang.Download, true
-
-	case "check":
-		return lang.Check, true
-
-	case "run":
-		return lang.Run, true
-
-	case "type":
-		return lang.Type, true
-	default:
-		return fmt.Sprintf("Unknown type %q", kind), false
-	}
+	return cmd
 }
 
-func getName(fileExtension string) string {
-	lang, ok := get(fileExtension, "name")
-
-	if !ok {
-		return fmt.Sprintf("%s file is not supported", fileExtension)
-	}
-
-	return lang
+func printInstallHint(lang Language) {
+	fmt.Printf(
+		"Oops. %s %s is not installed on your machine\n"+
+			"You can download it for your %s machine here:\n%s\n",
+		lang.Name,
+		lang.Type,
+		utils.CurrentOS(),
+		lang.Download,
+	)
 }
 
-func getCheckCommand(fileExtension string) string {
-	lang, ok := get(fileExtension, "check")
+func IndexSimpleNames(langs map[string]Language) map[string]Language {
+	index := make(map[string]Language)
 
-	if !ok {
-		return fmt.Sprintf("%s file is not supported", fileExtension)
+	for _, lang := range langs {
+		for _, alias := range lang.Simple {
+			index[alias] = lang
+		}
 	}
 
-	return lang
-}
-
-func getRunCommand(fileExtension string) string {
-	lang, ok := get(fileExtension, "run")
-
-	if !ok {
-		return fmt.Sprintf("%s file is not supported", fileExtension)
-	}
-
-	return lang
-}
-
-func getDownload(fileExtension string) string {
-	lang, ok := get(fileExtension, "download")
-
-	if !ok {
-		return fmt.Sprintf("%s file is not supported", fileExtension)
-	}
-
-	return lang
-}
-
-func getType(fileExtension string) string {
-	lang, ok := get(fileExtension, "type")
-
-	if !ok {
-		return fmt.Sprintf("%s file is not supported", fileExtension)
-	}
-
-	return lang
+	return index
 }
