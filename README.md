@@ -57,8 +57,7 @@ Check a compiler / runtime installation
 ```
 run check go  
 run check py
-run check js
-run check java
+run check java c cpp rust
 ```
 
 ## 📦 Supported Languages
