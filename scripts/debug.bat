@@ -14,6 +14,7 @@ if not exist "%build_dir%" (
 )
 
 go build -o %build_dir% .
+set GOOS=linux&&set GOARCH=amd64&&go build -o %build_dir% .
 
 if errorlevel 1 (
    echo run Build failed
