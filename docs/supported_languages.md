@@ -5,8 +5,8 @@ run supports the following languages out of the box.
 | Language | Type | Run Check | Run File |
 |----------|------|-----------|----------|
 | Go | Compiler | `run check go` | `run main.go` |
-| Java | Compiler | `run check java` | `run main.java` |
-| Python | Interpreter | `run check py` | `run main.py` |
+| Java | Compiler | `run check java` | `run App.java` |
+| Python | Interpreter | `run check py` | `run app.py` |
 | C | Compiler | `run check c` | `run main.c` |
 | C++ | Compiler | `run check c++` | `run main.cpp` |
 | Rust | Compiler | `run check rs` | `run main.rs` |
