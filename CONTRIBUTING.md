@@ -78,12 +78,31 @@ git checkout -b feature/add-kotlin-support
 
 ```
 run/
-├── cmd/              # CLI entry point
-├── internal/         # Core logic (language detection, execution, checks)
-├── configs/          # Language configuration JSON files
-├── docs/             # Documentation (supported languages, guides)
-├── tests/            # Tests
-└── README.md
+├── CONTRIBUTING.md
+├── LICENSE
+├── README.md
+├── cmd
+│   ├── check.go
+│   ├── constants.go
+│   ├── root.go
+│   └── utils
+│       ├── assets
+│       │   └── languages.json
+│       ├── config.go
+│       ├── file_utils.go
+│       ├── os_utils.go
+│       ├── run_utils.go
+│       └── str_utils.go
+├── docs
+│   ├── index.md
+│   ├── installation.md
+│   ├── supported_languages.md
+│   └── usage.md
+├── go.mod
+├── go.sum
+├── main.go
+└── scripts
+    └── debug.bat
 ```
 
 Understanding this layout will help you navigate and contribute effectively.
