@@ -44,7 +44,7 @@ Run supports multiple languages out of the box (and more can be added easily):
 | Rust | Compiler | `run check rs` | `run main.rs` |
 
 > [!TIP]
-> The full list is available [here](docs/supported_languages.md).
+> The complete supported languages list is available [here](docs/supported_languages.md).
 
 ---
 
