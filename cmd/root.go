@@ -90,7 +90,7 @@ func validateAndGetLanguage(file string) (Language, error) {
 		return Language{}, fmt.Errorf(
 			"source file %q must have an extension (%s)",
 			file,
-			Examples,
+			utils.GenerateExample(file, Examples),
 		)
 	}
 
