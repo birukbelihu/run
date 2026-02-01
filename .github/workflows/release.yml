@@ -1,0 +1,72 @@
+name: release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: "stable"
+
+      - name: Run tests
+        run: go test ./...
+
+      - name: Build binaries
+        run: |
+          set -e
+          mkdir -p dist
+
+          CGO_ENABLED=0 GOOS=linux   GOARCH=amd64 go build -o dist/run-linux-amd64
+          CGO_ENABLED=0 GOOS=linux   GOARCH=arm64 go build -o dist/run-linux-arm64
+
+          CGO_ENABLED=0 GOOS=darwin  GOARCH=amd64 go build -o dist/run-darwin-amd64
+          CGO_ENABLED=0 GOOS=darwin  GOARCH=arm64 go build -o dist/run-darwin-arm64
+
+          CGO_ENABLED=0 GOOS=windows GOARCH=amd64 go build -o dist/run-windows-amd64.exe
+
+      - name: Package artifacts
+        run: |
+          cd dist
+
+          # Linux
+          tar -czf run-linux-amd64.tar.gz run-linux-amd64
+          tar -czf run-linux-arm64.tar.gz run-linux-arm64
+
+          # macOS
+          tar -czf run-darwin-amd64.tar.gz run-darwin-amd64
+          tar -czf run-darwin-arm64.tar.gz run-darwin-arm64
+
+          # Windows
+          zip run-windows-amd64.zip run-windows-amd64.exe
+
+          # Remove raw binaries
+          rm -f \
+            run-linux-amd64 \
+            run-linux-arm64 \
+            run-darwin-amd64 \
+            run-darwin-arm64 \
+            run-windows-amd64.exe
+
+      - name: Generate SHA256 checksums
+        run: |
+          cd dist
+          sha256sum * > checksums.txt
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: dist/*
+          generate_release_notes: true
