@@ -18,13 +18,27 @@ Invoke-WebRequest "https://github.com/$Repo/releases/latest/download/$Asset" -Ou
 Invoke-WebRequest "https://github.com/$Repo/releases/latest/download/checksums.txt" -OutFile "checksums.txt"
 
 Write-Host "🔐 Verifying checksum..."
-$Expected = (Select-String $Asset checksums.txt).ToString().Split(" ")[0]
-$Actual = (Get-FileHash $Asset -Algorithm SHA256).Hash.ToLower()
+
+# Read checksums.txt safely
+$Line = Get-Content "checksums.txt" | Where-Object { $_ -match $Asset }
+
+if (-not $Line) {
+    Write-Error "Checksum entry for $Asset not found"
+    exit 1
+}
+
+# Split on ANY whitespace
+$Expected = ($Line -split '\s+')[0].ToLower()
+$Actual   = (Get-FileHash $Asset -Algorithm SHA256).Hash.ToLower()
 
 if ($Expected -ne $Actual) {
     Write-Error "Checksum verification failed!"
+    Write-Error "Expected: $Expected"
+    Write-Error "Actual:   $Actual"
     exit 1
 }
+
+Write-Host "✔ Checksum OK"
 
 Write-Host "📂 Extracting..."
 Expand-Archive $Asset -Force
