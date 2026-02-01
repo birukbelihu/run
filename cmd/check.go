@@ -18,7 +18,6 @@ var checkCmd = &cobra.Command{
 }
 
 func init() {
-	rootCmd.Flags().Bool("hide-link", false, "Wether to show download link when specified language or toolchain isn't installed")
 	rootCmd.AddCommand(checkCmd)
 }
 
