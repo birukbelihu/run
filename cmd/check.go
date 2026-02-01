@@ -13,7 +13,6 @@ var checkCmd = &cobra.Command{
 	Use:   "check [language...]",
 	Short: CheckCmdShortDescription,
 	Long:  CheckCmdLongDescription,
-	Args:  cobra.MinimumNArgs(1),
 	Run:   runCheck,
 }
 
@@ -22,12 +21,24 @@ func init() {
 }
 
 func runCheck(cmd *cobra.Command, args []string) {
+	if len(args) == 0 {
+		println("Check all")
+	}
+
+	checkedLangs := map[string]bool{}
 	for _, arg := range args {
 		lang, ok := simpleNamesIndex[arg]
 		if !ok {
 			pterm.Warning.Printf("Unknown language %q\n", arg)
 			continue
 		}
+
+		if checkedLangs[lang.Name] {
+			pterm.Warning.Printf("%s is specified multiple times, skipping duplicate\n", lang.Name)
+			continue
+		}
+
+		checkedLangs[lang.Name] = true
 
 		pterm.Info.Printf("Checking %s...\n", lang.Name)
 
