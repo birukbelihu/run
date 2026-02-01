@@ -1,9 +1,11 @@
 $ErrorActionPreference = "Stop"
 
 $Repo = "birukbelihu/run"
-$BinName = "run.exe"
-$InstallDir = "$env:LOCALAPPDATA\run"
 
+# Final installed command (users type `run`)
+$FinalBinaryName = "run.exe"
+
+$InstallDir = "$env:LOCALAPPDATA\run"
 $Platform = "windows"
 
 # Detect architecture
@@ -18,7 +20,7 @@ switch ($Arch) {
 }
 
 $Asset = "run-$Platform-$Arch.zip"
-$RawBinary = "run-$Platform-$Arch.exe"
+$ExtractedBinary = "run-$Platform-$Arch.exe"
 
 Write-Host "📦 Installing run for $Platform/$Arch"
 
@@ -44,8 +46,6 @@ $Actual   = (Get-FileHash $Asset -Algorithm SHA256).Hash.ToLower()
 
 if ($Expected -ne $Actual) {
     Write-Error "Checksum verification failed!"
-    Write-Error "Expected: $Expected"
-    Write-Error "Actual:   $Actual"
     exit 1
 }
 
@@ -54,14 +54,16 @@ Write-Host "✔ Checksum OK"
 Write-Host "📂 Extracting..."
 Expand-Archive $Asset -DestinationPath . -Force
 
-if (-not (Test-Path $RawBinary)) {
-    Write-Error "Expected binary '$RawBinary' not found after extraction"
+if (-not (Test-Path $ExtractedBinary)) {
+    Write-Error "Expected binary '$ExtractedBinary' not found after extraction"
     exit 1
 }
 
 Write-Host "🚀 Installing to $InstallDir"
 New-Item -ItemType Directory -Force -Path $InstallDir | Out-Null
-Move-Item $RawBinary (Join-Path $InstallDir $BinName) -Force
+
+# 🔑 Rename during install: run-windows-amd64.exe → run.exe
+Move-Item $ExtractedBinary (Join-Path $InstallDir $FinalBinaryName) -Force
 
 # Add to PATH if missing
 if (-not ($env:PATH -split ';' | Where-Object { $_ -eq $InstallDir })) {
