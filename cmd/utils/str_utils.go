@@ -15,6 +15,18 @@ func ReplacePlaceholders(command, sourceFile string) string {
 	return command
 }
 
+func capitalizeFirstLetter(str string) string {
+	if str == "" {
+		return ""
+	}
+
+	firstLetterCap := strings.ToUpper(string(str[0]))
+	rest := str[1:]
+	return firstLetterCap + rest
+}
+
 func GenerateExample(file, examples string) string {
-	return strings.ReplaceAll(examples, "{{file}}", file)
+	generatedExample := strings.ReplaceAll(examples, "{{File}}", capitalizeFirstLetter(file))
+	generatedExample = strings.ReplaceAll(generatedExample, "{{file}}", file)
+	return generatedExample
 }
