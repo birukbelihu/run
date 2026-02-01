@@ -37,7 +37,7 @@ Compile & run source files of any language with just one command.
 ### On Windows
 
 ```
-powershell -ExecutionPolicy ByPass -c "irm curl -fsSL https://raw.githubusercontent.com/birukbelihu/run/main/install.sh | iex"
+powershell -ExecutionPolicy ByPass -c "irm https://raw.githubusercontent.com/birukbelihu/run/main/install.ps1 | iex"
 ```
 
 ### On Linux & macOS
