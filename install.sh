@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -e
 
-REPO="YOUR_USER/run"
+REPO="birukbelihu/run"
 BIN_NAME="run"
 INSTALL_DIR="/usr/local/bin"
 

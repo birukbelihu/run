@@ -1,6 +1,6 @@
 $ErrorActionPreference = "Stop"
 
-$Repo = "YOUR_USER/run"
+$Repo = "birukbelihu/run"
 $BinName = "run.exe"
 $InstallDir = "$env:LOCALAPPDATA\run"
 
