@@ -4,13 +4,28 @@ $Repo = "birukbelihu/run"
 $BinName = "run.exe"
 $InstallDir = "$env:LOCALAPPDATA\run"
 
-$Asset = "run-windows-amd64.zip"
-$RawBinary = "run-windows-amd64.exe"
+# Detect OS (PowerShell version is Windows-only for now)
+$Platform = "windows"
 
-Write-Host "📦 Installing run for windows/amd64"
+# Detect architecture
+$Arch = $env:PROCESSOR_ARCHITECTURE.ToLower()
 
-$TempDir = Join-Path $env:TEMP "run-install"
-New-Item -ItemType Directory -Force -Path $TempDir | Out-Null
+switch ($Arch) {
+    "amd64" { $Arch = "amd64" }
+    "arm64" { $Arch = "arm64" }
+    default {
+        Write-Error "Unsupported architecture: $Arch"
+        exit 1
+    }
+}
+
+$Asset = "$BinName".Replace(".exe","") + "-$Platform-$Arch.zip"
+$RawBinary = "run-windows-$Arch.exe"
+
+Write-Host "📦 Installing run for $Platform/$Arch"
+
+# Create temp directory
+$TempDir = New-Item -ItemType Directory -Force -Path (Join-Path $env:TEMP "run-install")
 Set-Location $TempDir
 
 Write-Host "⬇️  Downloading release assets..."
@@ -19,15 +34,12 @@ Invoke-WebRequest "https://github.com/$Repo/releases/latest/download/checksums.t
 
 Write-Host "🔐 Verifying checksum..."
 
-# Read checksums.txt safely
 $Line = Get-Content "checksums.txt" | Where-Object { $_ -match $Asset }
-
 if (-not $Line) {
     Write-Error "Checksum entry for $Asset not found"
     exit 1
 }
 
-# Split on ANY whitespace
 $Expected = ($Line -split '\s+')[0].ToLower()
 $Actual   = (Get-FileHash $Asset -Algorithm SHA256).Hash.ToLower()
 
@@ -52,6 +64,7 @@ Write-Host "🚀 Installing to $InstallDir"
 New-Item -ItemType Directory -Force -Path $InstallDir | Out-Null
 Move-Item $RawBinary (Join-Path $InstallDir $BinName) -Force
 
+# Add to PATH if missing
 if (-not ($env:PATH -split ';' | Where-Object { $_ -eq $InstallDir })) {
     Write-Host "🔧 Adding to PATH"
     setx PATH "$env:PATH;$InstallDir" | Out-Null
