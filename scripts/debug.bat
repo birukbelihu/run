@@ -14,10 +14,12 @@ if not exist "%build_dir%" (
 )
 
 echo Building windows binary...
+set GOOS=windows
 go build -o %build_dir% .
 
 echo Building linux binary...
-set GOOS=linux&&set GOARCH=amd64&&go build -o %build_dir% .
+set GOOS=linux
+go build -o %build_dir% .
 
 if errorlevel 1 (
    echo run Build failed
