@@ -13,6 +13,7 @@ Compile & run source files of any language with just one command.
 ## 📑 Table of Contents
 
 - [Features](#features)
+- [Installation](#installation)
 - [Supported Languages](#supported-languages)
 - [Configuration](#configuration)
 - [Contributing](#contributing)
@@ -28,6 +29,22 @@ Compile & run source files of any language with just one command.
 - 📦 Config-driven language support (easy to add new languages)
 - 🌍 Cross-platform (Windows, Linux, macOS)
 - 🧩 Extensible architecture for future features (formatting, linting, packaging)
+
+---
+
+## Installation
+
+### On Windows
+
+```
+powershell -ExecutionPolicy ByPass -c "irm curl -fsSL https://raw.githubusercontent.com/birukbelihu/run/main/install.sh | iex"
+```
+
+### On Linux & macOS
+
+```
+curl -LsSf curl -fsSL https://raw.githubusercontent.com/birukbelihu/run/main/install.ps1  | sh
+```
 
 ---
 
