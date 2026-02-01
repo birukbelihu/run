@@ -4,12 +4,10 @@ $Repo = "birukbelihu/run"
 $BinName = "run.exe"
 $InstallDir = "$env:LOCALAPPDATA\run"
 
-# Detect OS (PowerShell version is Windows-only for now)
 $Platform = "windows"
 
 # Detect architecture
 $Arch = $env:PROCESSOR_ARCHITECTURE.ToLower()
-
 switch ($Arch) {
     "amd64" { $Arch = "amd64" }
     "arm64" { $Arch = "arm64" }
@@ -19,13 +17,14 @@ switch ($Arch) {
     }
 }
 
-$Asset = "$BinName".Replace(".exe","") + "-$Platform-$Arch.zip"
-$RawBinary = "run-windows-$Arch.exe"
+$Asset = "run-$Platform-$Arch.zip"
+$RawBinary = "run-$Platform-$Arch.exe"
 
 Write-Host "📦 Installing run for $Platform/$Arch"
 
-# Create temp directory
-$TempDir = New-Item -ItemType Directory -Force -Path (Join-Path $env:TEMP "run-install")
+# Temp directory
+$TempDir = Join-Path $env:TEMP "run-install"
+New-Item -ItemType Directory -Force -Path $TempDir | Out-Null
 Set-Location $TempDir
 
 Write-Host "⬇️  Downloading release assets..."
@@ -33,8 +32,8 @@ Invoke-WebRequest "https://github.com/$Repo/releases/latest/download/$Asset" -Ou
 Invoke-WebRequest "https://github.com/$Repo/releases/latest/download/checksums.txt" -OutFile "checksums.txt"
 
 Write-Host "🔐 Verifying checksum..."
-
 $Line = Get-Content "checksums.txt" | Where-Object { $_ -match $Asset }
+
 if (-not $Line) {
     Write-Error "Checksum entry for $Asset not found"
     exit 1
@@ -53,10 +52,10 @@ if ($Expected -ne $Actual) {
 Write-Host "✔ Checksum OK"
 
 Write-Host "📂 Extracting..."
-Expand-Archive $Asset -Force
+Expand-Archive $Asset -DestinationPath . -Force
 
 if (-not (Test-Path $RawBinary)) {
-    Write-Error "Expected binary '$RawBinary' not found"
+    Write-Error "Expected binary '$RawBinary' not found after extraction"
     exit 1
 }
 
