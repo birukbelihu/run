@@ -1,14 +1,16 @@
 $ErrorActionPreference = "Stop"
 
-$Repo = "birukbelihu/run"
+$Repo = "YOUR_USER/run"
 $BinName = "run.exe"
 $InstallDir = "$env:LOCALAPPDATA\run"
 
 $Asset = "run-windows-amd64.zip"
+$RawBinary = "run-windows-amd64.exe"
 
-Write-Host "📦 Installing run (Windows amd64)"
+Write-Host "📦 Installing run for windows/amd64"
 
-$TempDir = New-Item -ItemType Directory -Force -Path ([System.IO.Path]::GetTempPath() + "run-install")
+$TempDir = Join-Path $env:TEMP "run-install"
+New-Item -ItemType Directory -Force -Path $TempDir | Out-Null
 Set-Location $TempDir
 
 Write-Host "⬇️  Downloading release assets..."
@@ -27,11 +29,16 @@ if ($Expected -ne $Actual) {
 Write-Host "📂 Extracting..."
 Expand-Archive $Asset -Force
 
+if (-not (Test-Path $RawBinary)) {
+    Write-Error "Expected binary '$RawBinary' not found"
+    exit 1
+}
+
 Write-Host "🚀 Installing to $InstallDir"
 New-Item -ItemType Directory -Force -Path $InstallDir | Out-Null
-Move-Item $BinName "$InstallDir\$BinName" -Force
+Move-Item $RawBinary (Join-Path $InstallDir $BinName) -Force
 
-if (-not ($env:PATH -like "*$InstallDir*")) {
+if (-not ($env:PATH -split ';' | Where-Object { $_ -eq $InstallDir })) {
     Write-Host "🔧 Adding to PATH"
     setx PATH "$env:PATH;$InstallDir" | Out-Null
 }

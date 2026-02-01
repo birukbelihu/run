@@ -4,6 +4,7 @@
 ![GitHub forks](https://img.shields.io/github/forks/BirukBelihu/run?style=flat-square&logo=github)
 ![GitHub issues](https://img.shields.io/github/issues/BirukBelihu/run?style=flat-square)
 ![GitHub License](https://img.shields.io/github/license/birukbelihu/run?style=flat-square)
+[![release](https://github.com/birukbelihu/run/actions/workflows/release.yml/badge.svg)](https://github.com/birukbelihu/run/actions/workflows/release.yml)
 
 Compile & run source files of any language with just one command.
 
