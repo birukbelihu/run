@@ -13,18 +13,16 @@ var checkCmd = &cobra.Command{
 	Use:   "check [language...]",
 	Short: CheckCmdShortDescription,
 	Long:  CheckCmdLongDescription,
+	Args:  cobra.RangeArgs(1, 10),
 	Run:   runCheck,
 }
 
 func init() {
+	rootCmd.Flags().Bool("hide-link", false, "Wether to show download link when specified language or toolchain isn't installed")
 	rootCmd.AddCommand(checkCmd)
 }
 
 func runCheck(cmd *cobra.Command, args []string) {
-	if len(args) == 0 {
-		println("Check all")
-	}
-
 	checkedLangs := map[string]bool{}
 	for _, arg := range args {
 		lang, ok := simpleNamesIndex[arg]
