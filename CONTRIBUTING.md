@@ -135,7 +135,7 @@ run check kt
 run main.kt
 ```
 
-4. Update documentation if necessary (`docs/supported_languages.md`)
+4. Update [supported languages](README.md) list if necessary.
 
 ---
 
