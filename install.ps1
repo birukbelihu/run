@@ -96,5 +96,5 @@ if ($UserPath -notlike "*$InstallDir*") {
 #           Done
 # ===============================
 Write-Host "run installed successfully!"
-Write-Host "👉 Restart terminal and run:"
-Write-Host "   run --help"
+Write-Host "Restart terminal and run:"
+Write-Host "run --help"
