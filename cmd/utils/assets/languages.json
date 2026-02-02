@@ -267,5 +267,15 @@
     "run": "ocamlc -o {{out}} {{file}} && ./{{out}}",
     "output": "a.out",
     "type": "compiler"
-  }
+  },
+
+  "f90": {
+    "name": "Fortran",
+    "simple": ["fortran", "f90", "f95"],
+    "download": "https://gcc.gnu.org/fortran/",
+    "check": "gfortran --version",
+    "run": "gfortran {{file}} -o {{out}} && ./{{out}}",
+    "output": "a.out",
+    "type": "compiler"
+}
 }
