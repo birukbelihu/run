@@ -1,18 +1,20 @@
 $ErrorActionPreference = "Stop"
 
 # ===============================
-# Config
+#           Config
 # ===============================
+
 $Repo       = "birukbelihu/run"
 $InstallDir = "$env:LOCALAPPDATA\run"
 $Platform   = "windows"
 $FinalBin   = "run.exe"
 
-Write-Host "📦 Installing run for Windows..."
+Write-Host "Installing run for Windows..."
 
 # ===============================
-# Detect architecture
+#     Detect architecture
 # ===============================
+
 $Arch = $env:PROCESSOR_ARCHITECTURE.ToLower()
 switch ($Arch) {
     "amd64" { $Arch = "amd64" }
@@ -29,23 +31,23 @@ switch ($Arch) {
 $Asset = "run-$Platform-$Arch.zip"
 
 # ===============================
-# Temp workspace
+#      Temp workspace
 # ===============================
 $TmpDir = Join-Path $env:TEMP ("run-install-" + [guid]::NewGuid())
 New-Item -ItemType Directory -Force -Path $TmpDir | Out-Null
 Set-Location $TmpDir
 
 # ===============================
-# Download
+#         Download
 # ===============================
-Write-Host "⬇️  Downloading release assets..."
+Write-Host "Downloading release assets..."
 irm "https://github.com/$Repo/releases/latest/download/$Asset" -OutFile $Asset
 irm "https://github.com/$Repo/releases/latest/download/checksums.txt" -OutFile "checksums.txt"
 
 # ===============================
-# Verify checksum
+#      Verify checksum
 # ===============================
-Write-Host "🔐 Verifying checksum..."
+Write-Host "Verifying checksum..."
 $ExpectedHash = (Select-String $Asset checksums.txt).Line.Split(" ")[0].ToLower()
 $ActualHash   = (Get-FileHash $Asset -Algorithm SHA256).Hash.ToLower()
 
@@ -55,30 +57,30 @@ if ($ExpectedHash -ne $ActualHash) {
 }
 
 # ===============================
-# Extract
+#          Extract
 # ===============================
-Write-Host "📂 Extracting..."
+Write-Host "Extracting..."
 Expand-Archive $Asset -Force
 
 # ===============================
-# Find the executable
+#     Find the executable
 # ===============================
 $Exe = Get-ChildItem -Recurse -Filter "*.exe" | Select-Object -First 1
 
 if (-not $Exe) {
-    Write-Error "❌ No executable found in the archive!"
+    Write-Error "No executable found in the archive!"
     exit 1
 }
 
 # ===============================
-# Install
+#           Install
 # ===============================
-Write-Host "🚀 Installing to $InstallDir"
+Write-Host "Installing to $InstallDir"
 New-Item -ItemType Directory -Force -Path $InstallDir | Out-Null
 Move-Item $Exe.FullName "$InstallDir\$FinalBin" -Force
 
 # ===============================
-# Add to PATH
+#     Add to PATH
 # ===============================
 $UserPath = [Environment]::GetEnvironmentVariable("PATH", "User")
 if ($UserPath -notlike "*$InstallDir*") {
@@ -87,12 +89,12 @@ if ($UserPath -notlike "*$InstallDir*") {
         "$UserPath;$InstallDir",
         "User"
     )
-    Write-Host "➕ Added to PATH (restart terminal)"
+    Write-Host "Added to PATH (restart terminal)"
 }
 
 # ===============================
-# Done
+#           Done
 # ===============================
-Write-Host "✅ Installed successfully!"
+Write-Host "run installed successfully!"
 Write-Host "👉 Restart terminal and run:"
 Write-Host "   run --help"
