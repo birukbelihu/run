@@ -87,7 +87,7 @@ run/
 │   ├── root.go
 │   └── utils
 │       ├── assets
-│       │   └── languages.json
+│       |   └── languages.json
 │       ├── config.go
 │       ├── file_utils.go
 │       ├── os_utils.go
