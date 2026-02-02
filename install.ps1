@@ -40,14 +40,16 @@ if ($Expected -ne $Actual) {
 Write-Host "📂 Extracting..."
 Expand-Archive $Asset -Force
 
-if (-not (Test-Path "run.exe")) {
+$Exe = Get-ChildItem -Recurse -Filter run.exe | Select-Object -First 1
+
+if (-not $Exe) {
     Write-Error "run.exe not found in archive"
     exit 1
 }
 
 Write-Host "🚀 Installing to $InstallDir"
 New-Item -ItemType Directory -Force -Path $InstallDir | Out-Null
-Move-Item run.exe "$InstallDir\$BinName" -Force
+Move-Item $Exe.FullName "$InstallDir\$BinName" -Force
 
 # Add to PATH (user scope)
 $Path = [Environment]::GetEnvironmentVariable("PATH", "User")
