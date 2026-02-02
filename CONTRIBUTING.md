@@ -87,19 +87,16 @@ run/
 │   ├── root.go
 │   └── utils
 │       ├── assets
-│       |   └── languages.json
+│       │   └── languages.json
 │       ├── config.go
 │       ├── file_utils.go
 │       ├── os_utils.go
 │       ├── run_utils.go
 │       └── str_utils.go
-├── docs
-│   ├── index.md
-│   ├── installation.md
-│   ├── supported_languages.md
-│   └── usage.md
 ├── go.mod
 ├── go.sum
+├── install.ps1
+├── install.sh
 ├── main.go
 └── scripts
     └── debug.bat

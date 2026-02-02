@@ -143,11 +143,10 @@ Languages are defined in a JSON configuration file:
 ## Contributing
 
 Contributions are welcome!  
-Please read the [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
+Please read the [CONTRIBUTING](CONTRIBUTING.md) for guidelines.
 
 ---
 
 ## License
 
-This project is licensed under the Apache License, Version 2.0.  
-See the [LICENSE](LICENSE) file for more details.
+This project is licensed under the Apache License 2.0. See the [LICENSE](LICENSE) file for more details.
