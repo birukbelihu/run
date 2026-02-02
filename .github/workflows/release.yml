@@ -29,13 +29,13 @@ jobs:
           set -e
           mkdir -p dist
 
-          CGO_ENABLED=0 GOOS=linux   GOARCH=amd64 go build -o dist/run-linux-amd64
-          CGO_ENABLED=0 GOOS=linux   GOARCH=arm64 go build -o dist/run-linux-arm64
+          CGO_ENABLED=0 GOOS=linux   GOARCH=amd64 go build -ldflags="-s -w" -o dist/run-linux-amd64
+          CGO_ENABLED=0 GOOS=linux   GOARCH=arm64 go build -ldflags="-s -w" -o dist/run-linux-arm64
 
-          CGO_ENABLED=0 GOOS=darwin  GOARCH=amd64 go build -o dist/run-darwin-amd64
-          CGO_ENABLED=0 GOOS=darwin  GOARCH=arm64 go build -o dist/run-darwin-arm64
+          CGO_ENABLED=0 GOOS=darwin  GOARCH=amd64 go build -ldflags="-s -w" -o dist/run-darwin-amd64
+          CGO_ENABLED=0 GOOS=darwin  GOARCH=arm64 go build -ldflags="-s -w" -o dist/run-darwin-arm64
 
-          CGO_ENABLED=0 GOOS=windows GOARCH=amd64 go build -o dist/run-windows-amd64.exe
+          CGO_ENABLED=0 GOOS=windows GOARCH=amd64 go build -ldflags="-s -w" -o dist/run-windows-amd64.exe
 
       - name: Package artifacts
         run: |
