@@ -1,11 +1,17 @@
 $ErrorActionPreference = "Stop"
 
+# ===============================
+# Config
+# ===============================
 $Repo       = "birukbelihu/run"
 $InstallDir = "$env:LOCALAPPDATA\run"
 $Platform   = "windows"
 
 Write-Host "📦 Installing run for Windows..."
 
+# ===============================
+# Detect architecture
+# ===============================
 $Arch = $env:PROCESSOR_ARCHITECTURE.ToLower()
 switch ($Arch) {
     "amd64" { $Arch = "amd64" }
@@ -23,41 +29,56 @@ $Asset     = "run-$Platform-$Arch.zip"
 $RawBinary = "run-$Platform-$Arch.exe"
 $FinalBin  = "run.exe"
 
+# ===============================
+# Temp workspace
+# ===============================
 $TmpDir = Join-Path $env:TEMP ("run-install-" + [guid]::NewGuid())
 New-Item -ItemType Directory -Force -Path $TmpDir | Out-Null
 Set-Location $TmpDir
 
+# ===============================
+# Download
+# ===============================
 Write-Host "⬇️  Downloading release assets..."
 irm "https://github.com/$Repo/releases/latest/download/$Asset" -OutFile $Asset
 irm "https://github.com/$Repo/releases/latest/download/checksums.txt" -OutFile "checksums.txt"
 
+# ===============================
+# Verify checksum
+# ===============================
 Write-Host "🔐 Verifying checksum..."
-$ExpectedHash = (
-    Select-String $Asset checksums.txt
-).Line.Split(" ")[0].ToLower()
-
-$ActualHash = (
-    Get-FileHash $Asset -Algorithm SHA256
-).Hash.ToLower()
+$ExpectedHash = (Select-String $Asset checksums.txt).Line.Split(" ")[0].ToLower()
+$ActualHash   = (Get-FileHash $Asset -Algorithm SHA256).Hash.ToLower()
 
 if ($ExpectedHash -ne $ActualHash) {
     Write-Error "Checksum verification failed"
     exit 1
 }
 
+# ===============================
+# Extract
+# ===============================
 Write-Host "📂 Extracting..."
 Expand-Archive $Asset -Force
 
-if (-not (Test-Path $RawBinary)) {
-    Write-Error "Expected binary '$RawBinary' not found in archive"
+# 🔍 Find the binary ANYWHERE
+$Exe = Get-ChildItem -Recurse -Filter $RawBinary | Select-Object -First 1
+
+if (-not $Exe) {
+    Write-Error "Expected binary '$RawBinary' not found after extraction"
     exit 1
 }
 
+# ===============================
+# Install
+# ===============================
 Write-Host "🚀 Installing to $InstallDir"
 New-Item -ItemType Directory -Force -Path $InstallDir | Out-Null
+Move-Item $Exe.FullName "$InstallDir\$FinalBin" -Force
 
-Move-Item $RawBinary "$InstallDir\$FinalBin" -Force
-
+# ===============================
+# Add to PATH
+# ===============================
 $UserPath = [Environment]::GetEnvironmentVariable("PATH", "User")
 if ($UserPath -notlike "*$InstallDir*") {
     [Environment]::SetEnvironmentVariable(
@@ -68,6 +89,9 @@ if ($UserPath -notlike "*$InstallDir*") {
     Write-Host "➕ Added to PATH (restart terminal)"
 }
 
+# ===============================
+# Done
+# ===============================
 Write-Host "✅ Installed successfully!"
 Write-Host "👉 Restart terminal and run:"
 Write-Host "   run --help"
