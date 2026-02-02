@@ -14,6 +14,7 @@ Compile & run source files of any language with just one command.
 
 - [Features](#features)
 - [Installation](#installation)
+- [Usage](#usage)
 - [Supported Languages](#supported-languages)
 - [Configuration](#configuration)
 - [Contributing](#contributing)
@@ -48,6 +49,28 @@ curl -LsSf https://raw.githubusercontent.com/birukbelihu/run/main/install.sh | b
 
 ---
 
+## Usage
+
+Run a source file
+
+```
+run main.go
+run main.py
+run app.js
+run Main.java
+```
+
+Check toolchain availability
+
+```
+run check go
+run check python
+run check java
+run check c c++ rust fortran ocaml
+```
+
+---
+
 ## Supported Languages
 
 Run supports multiple languages out of the box (and more can be added easily):
@@ -60,9 +83,31 @@ Run supports multiple languages out of the box (and more can be added easily):
 | C | Compiler | `run check c` | `run main.c` |
 | C++ | Compiler | `run check c++` | `run main.cpp` |
 | Rust | Compiler | `run check rs` | `run main.rs` |
-
-> [!TIP]
-> The complete supported languages list is available [here](docs/supported_languages.md).
+| JavaScript (Node.js) | Interpreter | `run check javascript` | `run main.js` |
+| Ruby | Interpreter | `run check rb` | `run main.rb` |
+| PHP | Interpreter | `run check php` | `run main.php` |
+| TypeScript | Compiler | `run check typescript` | `run main.ts` |
+| Kotlin | Compiler | `run check kt` | `run main.kt` |
+| C# | Compiler | `run check cs` | `run main.cs` |
+| Swift | Compiler | `run check swift` | `run main.swift` |
+| Lua | Interpreter | `run check lua` | `run main.lua` |
+| R | Interpreter | `run check r` | `run main.r` |
+| Julia | Interpreter | `run check jl` | `run main.jl` |
+| Zig | Compiler | `run check zig` | `run main.zig` |
+| Nim | Compiler | `run check nim` | `run main.nim` |
+| D | Compiler | `run check d` | `run main.d` |
+| Scala | Compiler | `run check scala` | `run main.scala` |
+| Perl | Interpreter | `run check perl` | `run main.perl` |
+| Haskell | Compiler | `run check haskell` | `run main.haskell` |
+| Elixir | Interpreter | `run check elixir` | `run main.elixir` |
+| Clojure | Interpreter | `run check clojure` | `run main.clojure` |
+| Dart | Compiler | `run check dart` | `run main.dart` |
+| Common Lisp | Interpreter | `run check lisp` | `run main.lisp` |
+| Bash | Interpreter | `run check bash` | `run main.bash` |
+| PowerShell | Interpreter | `run check powershell` | `run main.powershell` |
+| Groovy | Interpreter | `run check groovy` | `run main.groovy` |
+| OCaml | Compiler | `run check ocaml` | `run main.ocaml` |
+| Fortran | Compiler | `run check fortran` | `run main.f95` |
 
 ---
 
