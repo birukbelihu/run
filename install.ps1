@@ -6,6 +6,7 @@ $ErrorActionPreference = "Stop"
 $Repo       = "birukbelihu/run"
 $InstallDir = "$env:LOCALAPPDATA\run"
 $Platform   = "windows"
+$FinalBin   = "run.exe"
 
 Write-Host "📦 Installing run for Windows..."
 
@@ -25,9 +26,7 @@ switch ($Arch) {
     }
 }
 
-$Asset     = "run-$Platform-$Arch.zip"
-$RawBinary = "run-$Platform-$Arch.exe"
-$FinalBin  = "run.exe"
+$Asset = "run-$Platform-$Arch.zip"
 
 # ===============================
 # Temp workspace
@@ -61,11 +60,13 @@ if ($ExpectedHash -ne $ActualHash) {
 Write-Host "📂 Extracting..."
 Expand-Archive $Asset -Force
 
-# 🔍 Find the binary ANYWHERE
-$Exe = Get-ChildItem -Recurse -Filter $RawBinary | Select-Object -First 1
+# ===============================
+# Find the executable
+# ===============================
+$Exe = Get-ChildItem -Recurse -Filter "*.exe" | Select-Object -First 1
 
 if (-not $Exe) {
-    Write-Error "Expected binary '$RawBinary' not found after extraction"
+    Write-Error "❌ No executable found in the archive!"
     exit 1
 }
 
