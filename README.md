@@ -43,7 +43,7 @@ powershell -ExecutionPolicy ByPass -c "irm https://raw.githubusercontent.com/bir
 ### On Linux & macOS
 
 ```
-curl -LsSf curl -fsSL https://raw.githubusercontent.com/birukbelihu/run/main/install.sh  | sh
+curl -LsSf https://raw.githubusercontent.com/birukbelihu/run/main/install.sh | bash
 ```
 
 ---
