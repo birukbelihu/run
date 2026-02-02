@@ -75,39 +75,39 @@ run check c c++ rust fortran ocaml
 
 Run supports multiple languages out of the box (and more can be added easily):
 
-| Language | Type | Run Check | Run File |
-|----------|------|-----------|----------|
-| Go | Compiler | `run check go` | `run main.go` |
-| Java | Compiler | `run check java` | `run App.java` |
-| Python | Interpreter | `run check py` | `run app.py` |
-| C | Compiler | `run check c` | `run main.c` |
-| C++ | Compiler | `run check c++` | `run main.cpp` |
-| Rust | Compiler | `run check rs` | `run main.rs` |
-| JavaScript (Node.js) | Interpreter | `run check javascript` | `run main.js` |
-| Ruby | Interpreter | `run check rb` | `run main.rb` |
-| PHP | Interpreter | `run check php` | `run main.php` |
-| TypeScript | Compiler | `run check typescript` | `run main.ts` |
-| Kotlin | Compiler | `run check kt` | `run main.kt` |
-| C# | Compiler | `run check cs` | `run main.cs` |
-| Swift | Compiler | `run check swift` | `run main.swift` |
-| Lua | Interpreter | `run check lua` | `run main.lua` |
-| R | Interpreter | `run check r` | `run main.r` |
-| Julia | Interpreter | `run check jl` | `run main.jl` |
-| Zig | Compiler | `run check zig` | `run main.zig` |
-| Nim | Compiler | `run check nim` | `run main.nim` |
-| D | Compiler | `run check d` | `run main.d` |
-| Scala | Compiler | `run check scala` | `run main.scala` |
-| Perl | Interpreter | `run check perl` | `run main.perl` |
-| Haskell | Compiler | `run check haskell` | `run main.haskell` |
-| Elixir | Interpreter | `run check elixir` | `run main.elixir` |
-| Clojure | Interpreter | `run check clojure` | `run main.clojure` |
-| Dart | Compiler | `run check dart` | `run main.dart` |
-| Common Lisp | Interpreter | `run check lisp` | `run main.lisp` |
-| Bash | Interpreter | `run check bash` | `run main.bash` |
-| PowerShell | Interpreter | `run check powershell` | `run main.powershell` |
-| Groovy | Interpreter | `run check groovy` | `run main.groovy` |
-| OCaml | Compiler | `run check ocaml` | `run main.ocaml` |
-| Fortran | Compiler | `run check fortran` | `run main.f95` |
+| Language | Type | Run Source File | Check Toolchain |
+|----------|------|----------|-----------|
+| Go | Compiler | `run main.go` | `run check go` |
+| Java | Compiler | `run App.java` | `run check java` |
+| Python | Interpreter | `run app.py` | `run check py` |
+| C | Compiler | `run main.c` | `run check c` |
+| C++ | Compiler | `run main.cpp` | `run check c++` |
+| Rust | Compiler | `run main.rs` | `run check rs` |
+| JavaScript (Node.js) | Interpreter | `run main.js` | `run check javascript` |
+| Ruby | Interpreter | `run main.rb` | `run check rb` |
+| PHP | Interpreter | `run main.php` | `run check php` |
+| TypeScript | Compiler | `run main.ts` | `run check typescript` |
+| Kotlin | Compiler | `run main.kt` | `run check kt` |
+| C# | Compiler | `run main.cs` | `run check cs` |
+| Swift | Compiler | `run main.swift` | `run check swift` |
+| Lua | Interpreter | `run main.lua` | `run check lua` |
+| R | Interpreter | `run main.r` | `run check r` |
+| Julia | Interpreter | `run main.jl` | `run check jl` |
+| Zig | Compiler | `run main.zig` | `run check zig` |
+| Nim | Compiler | `run main.nim` | `run check nim` |
+| D | Compiler | `run main.d` | `run check d` |
+| Scala | Compiler | `run main.scala` | `run check scala` |
+| Perl | Interpreter | `run main.perl` | `run check perl` |
+| Haskell | Compiler | `run main.haskell` | `run check haskell` |
+| Elixir | Interpreter | `run main.elixir` | `run check elixir` |
+| Clojure | Interpreter | `run main.clojure` | `run check clojure` |
+| Dart | Compiler | `run main.dart` | `run check dart` |
+| Common Lisp | Interpreter | `run main.lisp` | `run check lisp` |
+| Bash | Interpreter | `run main.bash` | `run check bash` |
+| PowerShell | Interpreter | `run main.powershell` | `run check powershell` |
+| Groovy | Interpreter | `run main.groovy` | `run check groovy` |
+| OCaml | Compiler | `run main.ocaml` | `run check ocaml` |
+| Fortran | Compiler | `run main.f95` | `run check fortran` |
 
 ---
 
