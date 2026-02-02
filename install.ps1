@@ -1,88 +1,60 @@
-# Requires PowerShell 7+
 $ErrorActionPreference = "Stop"
 
-$REPO = "birukbelihu/run"
-$BIN_NAME = "run"
-
-# Detect OS
-if ($IsLinux) {
-    $OS = "linux"
-    $INSTALL_DIR = "/usr/local/bin"
-} elseif ($IsMacOS) {
-    $OS = "darwin"
-    $INSTALL_DIR = "/usr/local/bin"
-} elseif ($IsWindows) {
-    $OS = "windows"
-    $INSTALL_DIR = "$env:USERPROFILE\bin"
-    if (-not (Test-Path $INSTALL_DIR)) {
-        New-Item -ItemType Directory -Path $INSTALL_DIR | Out-Null
-    }
-} else {
-    Write-Error "Unsupported OS"
-    exit 1
-}
+$Repo = "birukbelihu/run"
+$BinName = "run.exe"
+$InstallDir = "$env:LOCALAPPDATA\run"
+$Platform = "windows"
 
 # Detect architecture
-$ARCH = (uname -m)
-switch ($ARCH) {
-    "x86_64" { $ARCH = "amd64" }
-    "arm64" { $ARCH = "arm64" }
-    "aarch64" { $ARCH = "arm64" }
+$Arch = $env:PROCESSOR_ARCHITECTURE.ToLower()
+switch ($Arch) {
+    "amd64" { $Arch = "amd64" }
+    "arm64" { $Arch = "arm64" }
     default {
-        Write-Error "Unsupported architecture: $ARCH"
+        Write-Error "Unsupported architecture: $Arch"
         exit 1
     }
 }
 
-# Windows binaries are .exe
-$EXT = if ($IsWindows) { ".exe" } else { "" }
+$Asset = "run-$Platform-$Arch.zip"
 
-$ASSET = "$BIN_NAME-$OS-$ARCH.tar.gz"
-$RAW_BINARY = "$BIN_NAME-$OS-$ARCH$EXT"
+Write-Host "📦 Installing run for $Platform/$Arch"
 
-Write-Host "📦 Installing $BIN_NAME for $OS/$ARCH"
-
-# Create temp directory
-$TMP_DIR = New-Item -ItemType Directory -Path ([System.IO.Path]::Combine([System.IO.Path]::GetTempPath(), [System.Guid]::NewGuid().ToString()))
-Set-Location $TMP_DIR.FullName
+$TmpDir = Join-Path $env:TEMP ("run-install-" + [guid]::NewGuid())
+New-Item -ItemType Directory -Force -Path $TmpDir | Out-Null
+Set-Location $TmpDir
 
 Write-Host "⬇️  Downloading release assets..."
-Invoke-WebRequest -Uri "https://github.com/$REPO/releases/latest/download/$ASSET" -OutFile $ASSET
-Invoke-WebRequest -Uri "https://github.com/$REPO/releases/latest/download/checksums.txt" -OutFile "checksums.txt"
+iwr -useb "https://github.com/$Repo/releases/latest/download/$Asset" -OutFile $Asset
+iwr -useb "https://github.com/$Repo/releases/latest/download/checksums.txt" -OutFile checksums.txt
 
 Write-Host "🔐 Verifying checksum..."
-$expectedHash = Select-String -Path "checksums.txt" -Pattern $ASSET | ForEach-Object { $_.Line.Split(' ')[0] }
-$actualHash = Get-FileHash $ASSET -Algorithm SHA256 | Select-Object -ExpandProperty Hash
-if ($expectedHash -ne $actualHash) {
-    Write-Error "Checksum verification failed!"
+$Expected = (Select-String $Asset checksums.txt).Line.Split(" ")[0].ToLower()
+$Actual = (Get-FileHash $Asset -Algorithm SHA256).Hash.ToLower()
+
+if ($Expected -ne $Actual) {
+    Write-Error "Checksum verification failed"
     exit 1
 }
 
 Write-Host "📂 Extracting..."
-if ($IsWindows) {
-    # On Windows, you need tar.exe (comes with Windows 10+)
-    tar -xzf $ASSET
-} else {
-    tar -xzf $ASSET
-}
+Expand-Archive $Asset -Force
 
-if (-not (Test-Path $RAW_BINARY)) {
-    Write-Error "❌ Expected binary '$RAW_BINARY' not found"
+if (-not (Test-Path "run.exe")) {
+    Write-Error "run.exe not found in archive"
     exit 1
 }
 
-Write-Host "🚀 Installing to $INSTALL_DIR"
-if (-not $IsWindows) {
-    chmod +x $RAW_BINARY
-}
+Write-Host "🚀 Installing to $InstallDir"
+New-Item -ItemType Directory -Force -Path $InstallDir | Out-Null
+Move-Item run.exe "$InstallDir\$BinName" -Force
 
-Move-Item $RAW_BINARY "$INSTALL_DIR\$BIN_NAME$EXT" -Force
-
-# Ensure PATH contains the install directory on Windows
-if ($IsWindows -and (-not ($env:PATH -split ';' | Where-Object { $_ -eq $INSTALL_DIR }))) {
-    [Environment]::SetEnvironmentVariable("PATH", "$env:PATH;$INSTALL_DIR", [EnvironmentVariableTarget]::User)
-    Write-Host "✅ Added $INSTALL_DIR to your PATH. You may need to restart your shell."
+# Add to PATH (user scope)
+$Path = [Environment]::GetEnvironmentVariable("PATH", "User")
+if ($Path -notlike "*$InstallDir*") {
+    [Environment]::SetEnvironmentVariable("PATH", "$Path;$InstallDir", "User")
+    Write-Host "➕ Added to PATH (restart terminal)"
 }
 
 Write-Host "✅ Installed successfully!"
-Write-Host "👉 Run: $BIN_NAME$EXT --help"
+Write-Host "👉 Run: run --help"
