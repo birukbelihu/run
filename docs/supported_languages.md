@@ -34,3 +34,4 @@ run supports the following languages out of the box.
 | PowerShell | Interpreter | `run check powershell` | `run main.powershell` |
 | Groovy | Interpreter | `run check groovy` | `run main.groovy` |
 | OCaml | Compiler | `run check ocaml` | `run main.ocaml` |
+| Fortran | Compiler | `run check fortran` | `run main.f95` |
