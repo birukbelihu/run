@@ -110,14 +110,14 @@ func normalizeCommand(cmd string) string {
 }
 
 func printInstallHint(lang Language) {
-	fmt.Printf(
+	pterm.Error.Printf(
 		"Oops. %s %s is not installed on your machine\n"+
-			"You can download it for your %s machine here:\n%s\n",
+			"You can download it here for your %s machine:\n",
 		lang.Name,
 		lang.Type,
 		utils.CurrentOS(),
-		lang.Download,
 	)
+	pterm.FgCyan.Println(lang.Download)
 }
 
 func IndexSimpleNames(langs map[string]Language) map[string]Language {

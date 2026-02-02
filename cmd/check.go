@@ -47,11 +47,11 @@ func runCheck(cmd *cobra.Command, args []string) {
 		}
 
 		pterm.Error.Printf(
-			"%s %s is not installed\nDownload for %s:\n%s\n",
+			"%s %s is not installed\nDownload for %s:\n",
 			lang.Name,
 			lang.Type,
 			utils.CurrentOS(),
-			lang.Download,
 		)
+		pterm.FgCyan.Println(lang.Download)
 	}
 }
