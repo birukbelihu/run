@@ -4,7 +4,6 @@ set -e
 # ===============================
 #           Config
 # ===============================
-
 REPO="birukbelihu/run"
 BIN_NAME="run"
 INSTALL_DIR="/usr/local/bin"
@@ -70,7 +69,7 @@ echo "Extracting..."
 tar -xzf "$ASSET"
 
 if [[ ! -f "$RAW_BINARY" ]]; then
-  echo "❌ Expected binary '$RAW_BINARY' not found"
+  echo "Expected binary '$RAW_BINARY' not found"
   exit 1
 fi
 
@@ -84,5 +83,5 @@ sudo mv "$RAW_BINARY" "$INSTALL_DIR/$BIN_NAME"
 # ===============================
 #           Done
 # ===============================
-echo "Installed successfully!"
+echo "run installed successfully!"
 echo "Run: $BIN_NAME --help"
