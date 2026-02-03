@@ -2,17 +2,20 @@
 set -e
 
 # ===============================
-#           Config
+#           Configuration
 # ===============================
 REPO="birukbelihu/run"
 BIN_NAME="run"
 INSTALL_DIR="/usr/local/bin"
 
+# ===============================
+#        Detect OS / Arch
+# ===============================
 OS="$(uname | tr '[:upper:]' '[:lower:]')"
 ARCH="$(uname -m)"
 
 # ===============================
-#      Normalize architecture
+#      Normalize Architecture
 # ===============================
 case "$ARCH" in
   x86_64) ARCH="amd64" ;;
@@ -24,46 +27,61 @@ case "$ARCH" in
 esac
 
 # ===============================
-#      Detect platform/OS
+#        Detect Platform
 # ===============================
-if [[ "$OS" == "darwin" ]]; then
-  PLATFORM="darwin"
-elif [[ "$OS" == "linux" ]]; then
-  PLATFORM="linux"
-else
-  echo "Unsupported OS: $OS"
-  exit 1
-fi
+case "$OS" in
+  linux)  PLATFORM="linux" ;;
+  darwin) PLATFORM="darwin" ;;
+  *)
+    echo "Unsupported OS: $OS"
+    exit 1
+    ;;
+esac
 
 # ===============================
-#         Prepare asset names
+#       Prepare Asset Names
 # ===============================
 ASSET="${BIN_NAME}-${PLATFORM}-${ARCH}.tar.gz"
 RAW_BINARY="${BIN_NAME}-${PLATFORM}-${ARCH}"
 
-echo "Installing $BIN_NAME for $PLATFORM/$ARCH"
+echo "Installing '$BIN_NAME' for $PLATFORM/$ARCH"
 
 # ===============================
-#      Create temporary workspace
+#      Create Temp Workspace
 # ===============================
 TMP_DIR="$(mktemp -d)"
+cleanup() {
+  rm -rf "$TMP_DIR"
+}
+trap cleanup EXIT
+
 cd "$TMP_DIR"
 
 # ===============================
-#         Download assets
+#        Download Assets
 # ===============================
 echo "Downloading release assets..."
 curl -fsSLO "https://github.com/$REPO/releases/latest/download/$ASSET"
 curl -fsSLO "https://github.com/$REPO/releases/latest/download/checksums.txt"
 
 # ===============================
-#        Verify checksum
+#      Verify Checksum
 # ===============================
 echo "Verifying checksum..."
-grep "$ASSET" checksums.txt | sha256sum -c -
+
+if command -v sha256sum >/dev/null 2>&1; then
+  CHECK_CMD="sha256sum -c -"
+elif command -v shasum >/dev/null 2>&1; then
+  CHECK_CMD="shasum -a 256 -c -"
+else
+  echo "No SHA-256 checksum tool found"
+  exit 1
+fi
+
+grep "$ASSET" checksums.txt | eval "$CHECK_CMD"
 
 # ===============================
-#          Extract archive
+#       Extract Archive
 # ===============================
 echo "Extracting..."
 tar -xzf "$ASSET"
@@ -74,14 +92,23 @@ if [[ ! -f "$RAW_BINARY" ]]; then
 fi
 
 # ===============================
-#           Install binary
+#        Install Binary
 # ===============================
 echo "Installing to $INSTALL_DIR"
+
+if [[ ! -w "$INSTALL_DIR" ]]; then
+  echo "Administrator privileges required for $INSTALL_DIR"
+  SUDO="sudo"
+else
+  SUDO=""
+fi
+
 chmod +x "$RAW_BINARY"
-sudo mv "$RAW_BINARY" "$INSTALL_DIR/$BIN_NAME"
+$SUDO mv "$RAW_BINARY" "$INSTALL_DIR/$BIN_NAME"
 
 # ===============================
-#           Done
+#            Done
 # ===============================
-echo "run installed successfully!"
-echo "Run: $BIN_NAME --help"
+echo ""
+echo "'run' installed successfully!"
+echo "Try: $BIN_NAME --help"
