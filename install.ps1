@@ -13,7 +13,7 @@ Write-Host "Installing run for Windows..."
 # ===============================
 #     Detect architecture
 # ===============================
-# Handle WOW64 correctly
+
 $Arch = if ($env:PROCESSOR_ARCHITEW6432) {
     $env:PROCESSOR_ARCHITEW6432
 } else {
@@ -120,8 +120,8 @@ try {
     #           Done
     # ===============================
     Write-Host ""
-    Write-Host "✅ run installed successfully!"
-    Write-Host "➡️  Restart your terminal and run:"
+    Write-Host "run installed successfully!"
+    Write-Host "Restart your terminal and run:"
     Write-Host "   run --help"
 }
 finally {
