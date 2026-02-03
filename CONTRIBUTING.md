@@ -135,7 +135,7 @@ run check kt
 run main.kt
 ```
 
-4. Update [supported languages](README.md) list if necessary.
+4. Update [supported languages](https://birukbelihu.github.io/run/#supported-languages) list if necessary.
 
 ---
 
