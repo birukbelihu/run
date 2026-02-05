@@ -143,7 +143,7 @@ Languages are defined in a JSON configuration file:
 ## Contributing
 
 Contributions are welcome!  
-Please read the [CONTRIBUTING](CONTRIBUTING) for guidelines.
+Please read the [CONTRIBUTING](https://github.com/birukbelihu/run/blob/main/CONTRIBUTING.md) for guidelines.
 
 ---
 
