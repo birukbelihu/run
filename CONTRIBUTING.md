@@ -1,8 +1,3 @@
----
-layout: default
-title: Contributing
----
-
 # Contributing to run
 
 First of all, thank you for considering contributing to **run** 🙌  
