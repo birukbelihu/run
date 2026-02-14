@@ -40,9 +40,6 @@ jobs:
           # Windows Build
           CGO_ENABLED=0 GOOS=windows GOARCH=amd64 go build -ldflags="-s -w" -o dist/run-windows-amd64.exe
 
-          # Android Build
-          CGO_ENABLED=0 GOOS=android GOARCH=arm64 go build -ldflags="-s -w" -o dist/run-android-arm64
-
       - name: Package artifacts
         run: |
           cd dist
@@ -58,9 +55,6 @@ jobs:
           # Windows
           zip run-windows-amd64.zip run-windows-amd64.exe
 
-          # Android
-          tar -czf run-android-arm64.tar.gz run-android-arm64
-
           # Remove raw binaries
           rm -f \
             run-linux-amd64 \
@@ -68,7 +62,6 @@ jobs:
             run-darwin-amd64 \
             run-darwin-arm64 \
             run-windows-amd64.exe \
-            run-android-arm64
 
       - name: Generate SHA256 checksums
         run: |
