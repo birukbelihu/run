@@ -6,6 +6,7 @@
 ![GitHub language count](https://img.shields.io/github/languages/count/birukbelihu/run)
 ![GitHub License](https://img.shields.io/github/license/birukbelihu/run?style=flat-square)
 [![release](https://github.com/birukbelihu/run/actions/workflows/release.yml/badge.svg)](https://github.com/birukbelihu/run/actions/workflows/release.yml)
+![Downloads](https://img.shields.io/github/downloads/birukbelihu/run/v0.0.2/total)
 
 Compile & run source files of any language with just one command.
 
