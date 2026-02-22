@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<package>
+  <metadata>
+    <id>run</id>
+    <version>0.2.0</version>
+    <title>Run CLI</title>
+    <authors>Biruk Belihu</authors>
+    <owners>Biruk Belihu</owners>
+    <licenseUrl>https://github.com/birukbelihu/run/blob/main/LICENSE</licenseUrl>
+    <projectUrl>https://github.com/birukbelihu/run</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Compile and run source files of any language with just one command.</description>
+    <tags>cli run tool</tags>
+  </metadata>
+</package>

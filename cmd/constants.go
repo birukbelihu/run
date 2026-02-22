@@ -4,7 +4,7 @@ import "fmt"
 
 var (
 	Name     = "run"
-	Version  = "0.0.1"
+	Version  = "0.0.2"
 	RunASCII = `
  _ __   _   _   _ __
 | '__| | | | | | '_ \
