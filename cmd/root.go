@@ -21,6 +21,10 @@ type Language struct {
 	Type     string   `json:"type"`
 }
 
+type Config struct {
+	Run string `json:"run"`
+}
+
 var languages = loadLanguagesConfig()
 
 var rootCmd = &cobra.Command{
@@ -44,7 +48,10 @@ func init() {
 func runFile(cmd *cobra.Command, args []string) {
 	if len(args) == 0 {
 		if utils.IsFileExist(RunConfigFileName) {
-			pterm.Error.Println("Running custom cmd")
+			config := loadRunConfig()
+			if err := utils.Run(config.Run); err != nil {
+				pterm.Error.Printf("Execution failed: %v\n", err)
+			}
 		} else {
 			pterm.Error.Println("No run config file found. Use run init to create one")
 		}
@@ -82,6 +89,23 @@ func loadLanguagesConfig() map[string]Language {
 	}
 
 	return langs
+}
+
+func loadRunConfig() Config {
+	var config Config
+
+	data, err := os.ReadFile(RunConfigFileName)
+	if err != nil {
+		pterm.Error.Println(err)
+		return Config{}
+	}
+
+	if err := json.Unmarshal(data, &config); err != nil {
+		pterm.Error.Printf("Failed to parse run config: %v\n", err)
+		return Config{}
+	}
+
+	return config
 }
 
 func validateAndGetLanguage(file string) (Language, error) {
