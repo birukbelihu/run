@@ -29,6 +29,7 @@ Compile & run source files of any language with just one command.
 - 🛠 Built-in toolchain checks (detects if required compilers/runtimes are installed)
 - 🔍 Automatic language detection based on file extension
 - 📦 Config-driven language support (easy to add new languages)
+- 🔥 Compile & run single file or any kind of projects with just one command
 - 🌍 Cross-platform (Windows, Linux, macOS)
 - 🧩 Extensible architecture for future features (formatting, linting, packaging)
 
@@ -70,6 +71,13 @@ run check java
 run check c c++ rust fortran ocaml
 ```
 
+Initialize a configuration file for projects
+
+```
+run init
+```
+
+Then modify the run-config.json per your project requirement
 ---
 
 ## Supported Languages
