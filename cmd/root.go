@@ -43,7 +43,11 @@ func init() {
 
 func runFile(cmd *cobra.Command, args []string) {
 	if len(args) == 0 {
-		_ = cmd.Help()
+		if utils.IsFileExist("run-config.json") {
+			pterm.Error.Println("Running custom cmd")
+		} else {
+			pterm.Error.Println("No Run Config File Found. Use run init to create one")
+		}
 		return
 	}
 
