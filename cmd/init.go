@@ -1,35 +1,61 @@
 package cmd
 
 import (
-	"fmt"
+	"encoding/json"
+	"os"
+	"run/cmd/utils"
 
+	"github.com/pterm/pterm"
 	"github.com/spf13/cobra"
 )
 
+type RunConfig struct {
+	Run string `json:"run"`
+}
+
 var initCmd = &cobra.Command{
 	Use:   "init",
-	Short: "A brief description of your command",
-	Long: `A longer description that spans multiple lines and likely contains examples
-and usage of using your command. For example:
-
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
+	Short: InitCmdDescription,
+	Long:  InitCmdDescription,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("init called")
+		if utils.IsFileExist(RunConfigFileName) {
+			force, err := cmd.Flags().GetBool("force")
+			if err != nil {
+				panic(err)
+			}
+
+			if force {
+				overWriteRunConfig()
+				return
+			}
+			pterm.Warning.Println("Run config file already exists. Use -f flag to overwrite.")
+		} else {
+			createRunConfig()
+		}
 	},
+}
+
+func overWriteRunConfig() {
+	os.Remove(RunConfigFileName)
+	createRunConfig()
+}
+
+func createRunConfig() {
+	runConfig := RunConfig{
+		Run: "run --version",
+	}
+
+	config, err := json.Marshal(runConfig)
+	if err != nil {
+		panic(err)
+	}
+
+	os.WriteFile(RunConfigFileName, config, 0644)
+
+	pterm.Success.Println("Run config created successfully!")
 }
 
 func init() {
 	rootCmd.AddCommand(initCmd)
-
-	// Here you will define your flags and configuration settings.
-
-	// Cobra supports Persistent Flags which will work for this command
-	// and all subcommands, e.g.:
-	// initCmd.PersistentFlags().String("foo", "", "A help for foo")
-
-	// Cobra supports local flags which will only run when this command
-	// is called directly, e.g.:
-	// initCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+	initCmd.Flags().BoolP("force", "f", false, "Overwrite an existing run config file")
 }

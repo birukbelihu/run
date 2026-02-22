@@ -43,10 +43,10 @@ func init() {
 
 func runFile(cmd *cobra.Command, args []string) {
 	if len(args) == 0 {
-		if utils.IsFileExist("run-config.json") {
+		if utils.IsFileExist(RunConfigFileName) {
 			pterm.Error.Println("Running custom cmd")
 		} else {
-			pterm.Error.Println("No Run Config File Found. Use run init to create one")
+			pterm.Error.Println("No run config file found. Use run init to create one")
 		}
 		return
 	}
@@ -78,7 +78,7 @@ func loadLanguagesConfig() map[string]Language {
 	var langs map[string]Language
 
 	if err := json.Unmarshal([]byte(utils.RunConfig), &langs); err != nil {
-		panic(fmt.Sprintf("failed to load languages config: %v", err))
+		panic(fmt.Sprintf("Failed to load languages config: %v", err))
 	}
 
 	return langs
@@ -86,13 +86,13 @@ func loadLanguagesConfig() map[string]Language {
 
 func validateAndGetLanguage(file string) (Language, error) {
 	if !utils.IsFileExist(file) {
-		return Language{}, fmt.Errorf("source file %q doesn't exist", file)
+		return Language{}, fmt.Errorf("Source file %q doesn't exist", file)
 	}
 
 	ext := strings.ToLower(utils.GetFileExtension(file))
 	if ext == "" {
 		return Language{}, fmt.Errorf(
-			"source file %q must have an extension (%s)",
+			"Source file %q must have an extension (%s)",
 			file,
 			utils.GenerateExample(file, Examples),
 		)
@@ -100,7 +100,7 @@ func validateAndGetLanguage(file string) (Language, error) {
 
 	lang, ok := languages[ext]
 	if !ok {
-		return Language{}, fmt.Errorf("file extension %q is not supported", ext)
+		return Language{}, fmt.Errorf("File extension %q is not supported", ext)
 	}
 
 	return lang, nil

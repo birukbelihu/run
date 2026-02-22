@@ -19,4 +19,7 @@ var (
 
 	CheckCmdShortDescription = "Check the availability of a compiler or toolchain installation"
 	CheckCmdLongDescription  = fmt.Sprintf("%s.\n e.g. run check go, run check java, run check python", CheckCmdShortDescription)
+
+	RunConfigFileName  = "run-config.json"
+	InitCmdDescription = fmt.Sprintf("Create %s file to run any kind of project", RunConfigFileName)
 )
